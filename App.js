@@ -1,68 +1,37 @@
-import React, { Component } from 'react';
-import { Animated, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React from 'react';
+import { ScrollView, View } from 'react-native';
+import RegistrationForm from './components/auth/register';
+import  { initializeApp } from 'firebase/app';
+import LoginForm from './components/auth/login';
+import PharmacyList from './components/pharmacy/pharmaciesList';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-class FadeAnimation extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fadeAnim: new Animated.Value(0), // Initial value for opacity: 0
-    };
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyBx2yNJKhZT2MMmwZy12wAmzmQBSdz1x3I",
+  authDomain: "authentication-pharmacie.firebaseapp.com",
+  projectId: "authentication-pharmacie",
+  storageBucket: "authentication-pharmacie.appspot.com",
+  messagingSenderId: "198675792988",
+  appId: "1:198675792988:web:3aa0261775d25bd88bd299",
+  measurementId: "G-W0NCX6S1C2"
+};
 
-  componentDidMount() {
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 2000, // Fade in over 2 seconds
-        useNativeDriver: true // Use the native driver for performance
-      }
-    ).start();
-  }
+initializeApp(firebaseConfig);
 
-  render() {
-    const { fadeAnim } = this.state;
+const Stack = createNativeStackNavigator();
 
-    return (
-      <Animated.View
-        style={{
-          ...this.props.style,
-          opacity: fadeAnim, // Bind opacity to animated value
-        }}
-      >
-        {this.props.children}
-      </Animated.View>
-    );
-  }
-}
+const App = () => {
+  return (
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <FadeAnimation style={styles.fadeAnimation}>
-          <TouchableOpacity onPress={() => console.log('Button Pressed')}>
-            <Text style={styles.text}>Press Me!</Text>
-          </TouchableOpacity>
-        </FadeAnimation>
-      </View>
-    );
-  }
-}
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="home" screenOptions={{ headerShown: false }}> 
+        <Stack.Screen name="home" component={PharmacyList} />
+        <Stack.Screen name="login" component={LoginForm} />
+        <Stack.Screen name="register" component={RegistrationForm} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fadeAnimation: {
-    backgroundColor: 'skyblue',
-    padding: 20,
-    borderRadius: 10,
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
-  },
-});
+export default App;
